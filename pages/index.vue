@@ -1,86 +1,87 @@
 <template>
   <div>
     <h1 :style="{ fontSize: '30px' }">Dashboard</h1>
-  <h4 :style="{ margin: '14px 0' }">Date 18/05/2023, Time: 10:30 AM VNT</h4>
-  <hr />
+    <h4 :style="{ margin: '14px 0' }">Date 18/05/2023, Time: 10:30 AM VNT</h4>
+    <hr />
 
-  <div class="box-select d-flex">
-    <div class="buy">
-      <label for="">Currency Buy &nbsp;</label>
-      <a-select
-        v-model:value="currency"
-        label-in-value
-        style="width: 120px"
-        :options="currencyData"
-      ></a-select>
+    <div class="box-select d-flex">
+      <div class="buy">
+        <label for="">Currency Buy &nbsp;</label>
+        <a-select
+          v-model:value="currency"
+          label-in-value
+          style="width: 120px"
+          :options="currencyData"
+        ></a-select>
+      </div>
+
+      <div class="sell">
+        <label for="">Currency Sell &nbsp;</label>
+        <a-select
+          v-model:value="currency"
+          label-in-value
+          style="width: 120px"
+          :options="currencyData"
+        ></a-select>
+      </div>
     </div>
 
-    <div class="sell">
-      <label for="">Currency Sell &nbsp;</label>
-      <a-select
-        v-model:value="currency"
-        label-in-value
-        style="width: 120px"
-        :options="currencyData"
-      ></a-select>
+    <div class="box-button">
+      <a-button type="primary" v-for="(button, key) in buttons" :key="key"
+        >{{ button.title }}: {{ button.number }}</a-button
+      >
     </div>
-  </div>
 
-  <div class="box-button">
-    <a-button type="primary" v-for="(button, key) in buttons" :key="key"
-      >{{ button.title }}: {{ button.number }}</a-button
-    >
-  </div>
+    <div class="public-sport-rate">
+      <h1 :style="{ margin: '18px 0', fontSize: '24px' }">
+        Top 3 Best Rate Route
+      </h1>
+      <Line
+        id="my-chart-id"
+        :options="options"
+        :data="chartData"
+        style="height: 200px"
+      />
 
-  <div class="public-sport-rate">
-    <h1 :style="{ margin: '18px 0', fontSize: '24px' }">
-      Top 3 Best Rate Route
-    </h1>
-    <Bar
-      id="my-chart-id"
-      :options="options"
-      :data="chartData"
-      style="height: 200px"
-    />
-
-    <a-row :gutter="16" class="mt-5">
-      <a-col :span="8">
-        <a-card title="Rate Route 1" :bordered="true" >
-          <p>VND - USDT - Agent A</p>
-          <p>USDT - SGD - Agent B</p>
-          <p>VND - SGD: 17000</p>
-        </a-card>
-      </a-col>
-      <a-col :span="8">
-        <a-card title="Rate Route 2" :bordered="true">
-          <p>VND - USDT - Agent B</p>
-          <p>USDT - SGD - Agent C</p>
-          <p>VND - SGD: 17500</p>
-        </a-card>
-      </a-col>
-      <a-col :span="8">
-        <a-card title="Rate Route 3" :bordered="true">
-          <p>VND - USDT - Agent D</p>
-          <p>USDT - SGD - Agent E</p>
-          <p>VND - SGD: 18000</p>
-        </a-card>
-      </a-col>
-    </a-row>
-  </div>
+      <a-row :gutter="16" class="mt-5">
+        <a-col :span="8">
+          <a-card title="Rate Route 1" :bordered="true">
+            <p>VND - USDT - Agent A</p>
+            <p>USDT - SGD - Agent B</p>
+            <p>VND - SGD: 17000</p>
+          </a-card>
+        </a-col>
+        <a-col :span="8">
+          <a-card title="Rate Route 2" :bordered="true">
+            <p>VND - USDT - Agent B</p>
+            <p>USDT - SGD - Agent C</p>
+            <p>VND - SGD: 17500</p>
+          </a-card>
+        </a-col>
+        <a-col :span="8">
+          <a-card title="Rate Route 3" :bordered="true">
+            <p>VND - USDT - Agent D</p>
+            <p>USDT - SGD - Agent E</p>
+            <p>VND - SGD: 18000</p>
+          </a-card>
+        </a-col>
+      </a-row>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {
   Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
 } from 'chart.js'
-import { Bar } from 'vue-chartjs'
+import { Line } from 'vue-chartjs'
 import ChartJSPluginDatalabels from 'chartjs-plugin-datalabels'
 
 import { ref } from 'vue'
@@ -95,12 +96,13 @@ definePageMeta({
 
 const currency = ref({ value: 'vnd' })
 ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
   ChartJSPluginDatalabels
 )
 
@@ -119,15 +121,33 @@ ChartJS.register(
 
 const datasets = [
   {
-    label: 'VND - SGD',
-    data: [17000, 17500, 18000],
-    backgroundColor: ['#1890ff'],
-    borderWidth: 0,
+    label: 'Rate Route 1',
+    data: [17000, 17100, 17300, 17400, 17500, 17600],
+    fill: true,
+    backgroundColor: 'green',
+    borderColor: 'green',
+    tension: 0.1
+  },
+  {
+    label: 'Rate Route 2',
+    data: [17600, 17700, 17600, 17300, 17200, 17100],
+    fill: false,
+    backgroundColor: 'yellow',
+    borderColor: 'yellow',
+    tension: 0.1
+  },
+  {
+    label: 'Rate Route 3',
+    data: [18000, 17900, 17800, 17700, 17600, 17400],
+    fill: false,
+    backgroundColor: 'orange',
+    borderColor: 'orange',
+    tension: 0.1
   },
 ]
 
 const chartData = {
-  labels: ['Rate Route 1', 'Rate Route 2', 'Rate Route 3'],
+  labels: ['May 15', 'May 16', 'May 17', 'May 18', 'May 19', 'May 20'],
 
   datasets: datasets,
 }
@@ -136,19 +156,19 @@ const options = {
   responsive: true,
   plugins: {
     legend: {
-      display: false,
+      display: true,
     },
     datalabels: {
-      formatter: function (value, context) {
-        // console.log(context.chart.data.datasets[context.dataIndex]);
-        // console.log(context.dataIndex);
-        console.log(context.chart.data.datasets)
+      // formatter: function (value, context) {
+      //   // console.log(context.chart.data.datasets[context.dataIndex]);
+      //   // console.log(context.dataIndex);
+      //   console.log(context.chart.data.datasets)
 
-        return context.chart.data.datasets[0]?.label + ': ' + value
-        // return context.chart.data.labels[context.dataIndex];
-      },
+      //   return context.chart.data.datasets[0]?.label + ': ' + value
+      //   // return context.chart.data.labels[context.dataIndex];
+      // },
       align: 'top',
-      color: 'white',
+      // color: 'white',
       font: {
         size: 16,
       },
@@ -163,13 +183,13 @@ const options = {
         display: true, //this will remove only the label
       },
       grid: {
-        display: false // Loại bỏ đường viền lưới dọc trục x
-      }
-      // title: {
-      //   display: true,
-      //   text: 'VND - SGD',
-      //   color: 'black',
-      // },
+        display: false, // Loại bỏ đường viền lưới dọc trục x
+      },
+      title: {
+        display: true,
+        text: 'VND - SGD',
+        color: 'black',
+      },
       // display: false, // Hide Y axis labels
     },
     x: {
@@ -180,8 +200,8 @@ const options = {
         display: true, //this will remove only the label
       },
       grid: {
-        display: false // Loại bỏ đường viền lưới dọc trục x
-      }
+        display: false, // Loại bỏ đường viền lưới dọc trục x
+      },
       // title: {
       //   display: true,
       //   color: 'black',
@@ -298,7 +318,7 @@ const buttons = [
   margin-top: 20px;
 }
 
-.mt-5{
+.mt-5 {
   margin-top: 20px;
 }
 </style>
